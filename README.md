@@ -1,5 +1,5 @@
 # arduinosafe
-As a user of the world wide web, we should use strong passwords consisting of 
+As users of the world wide web, we should use strong passwords consisting of 
 special chars, numbers and lower & uppercase letters. But who can remember´those 
 strong passwords? *Nobody*
 ##Safe Solution
