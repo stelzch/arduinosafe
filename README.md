@@ -1,2 +1,2 @@
-# arduinosafe
-A password safe running on the Arduino Leonardo
+# arduinosafe drafts
+Branch for ideas, links and internal documentation

@@ -1,0 +1,9 @@
+Arduino Storage Dimensions
+==========================
+
+		Leonardo		Mega2560
+-------------------------------------------------
+RAM		2.5 kB			8kB
+Program Memory	32kB			256kB
+Persistant Mem	1kB			4kB
+CPU-Speed	16 MHz			16 MHz
