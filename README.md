@@ -13,4 +13,5 @@ stores *all your passwords* encrypted by a strong algorithm (AES).
 	git checkout -b draft origin/draft
 You are now in your local branch "draft", can make changes and commit.
 Then push your changes with:
+
 	git push
