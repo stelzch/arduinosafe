@@ -6,8 +6,7 @@ class Driver {
 		};
 		UserInterface userInterface;
 		Database db;
-		void callState(
+		virtual void callState(States) = 0;
 	private:
-		State& currentState;
-
+		State& lastState;
 };

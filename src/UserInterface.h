@@ -1,7 +1,7 @@
 class UserInterface {
 	public:
-		void setCaption(char[] caption);
-		int selectFromList(char entries[][]);
-		char[] readString();
+		virtual void setCaption(char[] caption) = 0;
+		virtual int selectFromList(char entries[][]) = 0;
+		virtual char[] readString() = 0;
 	private:
 };

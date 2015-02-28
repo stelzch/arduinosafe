@@ -2,8 +2,8 @@ class State {
 	public:
 		State();
 		virtual ~State();
-		void start(Driver&);
-		int getId();
+		virtual void start(Driver&) = 0;
+		virtual int getId() = 0;
 	private:
 		int id;
 };
