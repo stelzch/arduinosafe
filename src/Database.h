@@ -1,3 +1,6 @@
+#ifndef DATABASE_H_
+#define DATABASE_H_
+
 #include "DatabaseEntry.h"
 
 class Database {
@@ -5,3 +8,4 @@ class Database {
 		DatabaseEntry readEntry(char[]);
 		DatabaseEntry[] readAll();
 };
+#endif

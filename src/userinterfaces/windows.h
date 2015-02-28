@@ -1,3 +1,6 @@
+#ifndef WINDOWSUSERINTERFACE_H_
+#define WINDOWSUSERINTERFACE_H_
+
 #include <iostream>
 #include <stdlib.h>
 #include <string>
@@ -48,3 +51,5 @@ private:
 	}
 	
 };
+
+#endif

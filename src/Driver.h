@@ -1,3 +1,6 @@
+#ifndef DRIVER_H_
+#define DRIVER_H_
+
 class Driver {
 	public:
 		enum States {
@@ -10,3 +13,5 @@ class Driver {
 	private:
 		State& lastState;
 };
+
+#endif
