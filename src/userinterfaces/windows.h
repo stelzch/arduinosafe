@@ -25,6 +25,20 @@ public:
 		cin >> selected;
 		return selected - 1;
 	}
+	string readString(string caption) {
+		clearScreen(); // Clear previous output
+
+		// ==First, set caption==
+		cout << caption << endl; // Print the caption
+		for(int i=0;i<caption.size();i++) {
+			cout << "="; // Underline it
+		}
+		cout << endl; // Flush the output
+		
+		string response;
+		cin >> response;
+		return response;
+	}
 private:
 	void println(char text[]) {
 		cout << text << endl;
