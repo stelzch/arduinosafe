@@ -1,22 +1,41 @@
 #include <stdio.h>
-#include <windows.h>
-//#include <string>
 
 char nutzlos[] = "";
 char tempRueckgabe[] = "";
 
+
+/*
+int hauptmenu();
+int obstMenu();
+int MusikMenu();
+int SportMenu();
+int SSSMenu();
+*/
+/*
+typedef  void (*zfp)(void);
+ zfp hm=&hauptmenu;
+ zfp om=&obstMenu;
+ zfp mm=&MusikMenu;
+ zfp sm=&SportMenu;
+ zfp sssm=&SSSMenu;
+*/
+/*
+ int (*hm)()=&hauptmenu;
+ int (*om)()=&obstMenu;
+ int (*mm)()=&MusikMenu;
+ int (*sm)()=&SportMenu;
+ int (*sssm)()=&SSSMenu;
+*/
+
 void ausgabe(char zeile1[], char zeile2[])
 {
-	printf(zeile1);
+	printf("%s",zeile1);
 	printf("\n");
-	printf(zeile2);
+	printf("%s",zeile2);
 }
-
 void eingabe()
 {
-	//char rueckgabe[] = "";
 	fgets(tempRueckgabe, 50, stdin);
-	
 }
 
 int showMenu(char* entries[])
@@ -29,13 +48,10 @@ int showMenu(char* entries[])
 		printf("\n");
 		i++;
 	}
-
 	i--;
-
-	printf("Your choice: ");
+	printf("%s","Your choice: ");
 	int choice;
-	scanf_s("%d", &choice);
-	//choice -= 48;
+	scanf("%d", &choice);
 	if ((choice < 1) || (choice > i))
 	{
 		choice = 0;
@@ -49,14 +65,12 @@ void clearScreen()
 }
 
 //--------------------------------
-int hauptmenue()
+int hauptmenu()
 {
 	char* dasHauptMenu[] = { "Wo willst du hin?", "Obstmenu", "Musikmenu", "Sportmenu","SSSMenu", "" };
 	int auswahl = showMenu(dasHauptMenu);
 	return auswahl;
 }
-//--------------------------------
-
 int obstMenu(){
 	char* dasMenuHeute[] = { "Was willst du essen?", "Apfel", "Birne", "Banane", "Mango", "Kiwi", "Zurueck", "" };
 	int auswahl = showMenu(dasMenuHeute);
@@ -64,13 +78,13 @@ int obstMenu(){
 	return 0;
 }
 
-int (*musikMenuZeiger)() = & MusikMenu;
+
 
 int MusikMenu(){
 	char* dieMusikAuswahl[] = { "Was willst du hoeren?", "Musik", "Stille", "Nichts", "Zurueck", "Kiwi", ""};
 	int auswahl = showMenu(dieMusikAuswahl);
 	if (auswahl=5){
-		printf("Kiwi is keine Musik");
+		printf("%s","Kiwi is keine Musik");
 	}
 	ausgabe(dieMusikAuswahl[auswahl], "");
 	return 0;
@@ -81,7 +95,7 @@ int SportMenu(){
 	char* SportAuswahl[] = { "Was willst du spielen", "Nichts", "Schach", "Hau den ..", "Zurueck", "Kiwi", "" };
 	int auswahl = showMenu(SportAuswahl);
 	if (auswahl == 5){
-		printf("Kiwi is ne geile Sportart")  ;
+		printf("%s","Kiwi is ne geile Sportart")  ;
 	}
 	ausgabe(SportAuswahl[auswahl], "");
 	return 0;
@@ -92,18 +106,18 @@ int SSSMenu(){
 	char* SSSMenu[] = { "Aktion", "Passwoerter", "MasterPW", "aluxa", "AFK", "Kiwi", "" };
 	int auswahl = showMenu(SSSMenu);
 	if (auswahl == 5){
-		printf("Der Edeka is nur fuenf min entfernt");
+		printf("%s","Der Edeka is nur fuenf min entfernt");
 	}
 	ausgabe(SSSMenu[auswahl], "");
 	return 0;
 }
 
 int aufrufen(int auswahl){
-	{
+	
 	switch (auswahl)
 	{
 	case 0:
-		return hauptmenue();
+		return hauptmenu();
 		break;
 	case 1:
 		return obstMenu();
@@ -120,6 +134,8 @@ int aufrufen(int auswahl){
 	}
 }
 
+
+
 int main(){
 	int naechster = aufrufen(0);
 	while (naechster != 10)
@@ -129,6 +145,3 @@ int main(){
 	return 0;
 }
 
-// char* dasMenuHeute[] = { "Was willst du essen?", "Apfel", "Birne", "Banane", "Mango", "Kiwi" };
-// int auswahl = showMenu(dasMenuHeute);
-// printf("Auswahl war %d\n", auswahl);
