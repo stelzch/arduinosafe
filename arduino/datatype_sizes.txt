@@ -1,0 +1,12 @@
+These are the datatype sizes of a C++ Program running on a Arduino Leonardo:
+
+Datatype		Size in Bits		Size in Bytes
+==============================================================
+Byte			8			1
+Char			8			1
+Short			16			2
+int			16			2
+float			32			4
+double			32			4
+long			32			4
+long long		64			8
