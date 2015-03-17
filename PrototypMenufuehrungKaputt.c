@@ -1,15 +1,22 @@
 #include <stdio.h>
-
 char nutzlos[] = "";
 char tempRueckgabe[] = "";
+   FILE *pwd;
+  int tl=30;
+  char pwchiffred[30+1];
+  char pwcleartext[30+1];
 
 
 //immer erst Acc Name, Passwort, Username
-char usernames[] = {"robert.robertorobertonet.robert", "ichbin.keine@spam.de", "Robertosondeespaiono@gockelmail.com", "Fruchtig, Saftik, plüschick", ""};
-char passwoerter[] = {"klautnichtmeineDateeen", "PIN:3416", "0000", "Vogelsang", ""};
-char konto[] = {"Facebook", "Amazon", "GooglePLUS", "Kiwi", ""};
+//char* usernames[] = {"robert.robertorobertonet.robert", "ichbin.keine@spam.de", "Robertosondeespaiono@gockelmail.com", "Fruchtig, Saftik, plüschick", ""};
+//char* passwoerter[] = {"klautnichtmeineDateeen", "PIN:3416", "0000", "Vogelsang", ""};
+//char* konto[] = {"Facebook", "Amazon", "GooglePLUS", "Kiwi", ""};
 
 char masterPW[] = "1";
+
+
+
+
 /*
 int hauptmenu();
 int obstMenu();
@@ -57,6 +64,7 @@ int showMenu(char* entries[])
 	}
 	i--;
 	printf("%s","Your choice: ");
+
 	int choice;
 	scanf("%d", &choice);
 	if ((choice < 1) || (choice > i))
@@ -88,7 +96,7 @@ int MasterPWEingabe()
 {
 	char* PasswortMenu[] = { "Gib das MasterPasswort ein!", "" };
 	showMenuOhneEingabe(PasswortMenu);
-	tempRueckgabe = "";
+	//tempRueckgabe = "";
 	eingabe();
 	if(strcmp(tempRueckgabe, masterPW))
 	{
@@ -105,12 +113,11 @@ int hauptmenu(){
 	
 	return (showMenu(SSSMenu)+1);
 	}
-	
+/*	
 int pwdAuswahl()
 {
 	clearScreen();
-	char* ausgabe[] = {"Usernames:"} + konto;
-}
+} */
 
 int aufrufen(int auswahl){
 	
@@ -122,17 +129,53 @@ int aufrufen(int auswahl){
 	case 1:
 		return MasterPWEingabe();
 		break;
-	case 2:
+	/* case 2:
 		return pwdAuswahl();
-		break;
+		break; */
 	}
+}
+ //einlesen des pws
+int readpwchiffred(){
+
+  pwd = fopen ("Nutzlos", "r");
+  if (pwd != NULL){
+    fscanf (pwd, "%1000c", pwchiffred);
+    pwchiffred[1000] = '\0';
+    printf ("%s\n", pwchiffred);
+  }
+
 }
 
 
+/* 
+int unchiffer(char* catounchiffre[], char* destca){
+int i;
+int useless;
+for(i=0; i < sizeof catounchiffre; ++i)  
+ useless=ascii[catounchiffre[i]+4];	
+sprintf(destca,"%c",useless);
+}
+*/
 
 int main(){
-	int naechster = aufrufen(1);
-	while (naechster != 10)
+  readpwchiffred();
+ 
+//
+//unchiffer(pwchiffred,pwcleartext);
+
+int i=0;
+int useless;
+//for(i=0; i < sizeof pwchiffred; ++i){ 
+  while(i < sizeof pwchiffred){
+    
+ useless=pwchiffred[i]-4;
+ pwcleartext[i]= useless;
+ i++;
+}
+
+printf("%s\n", pwcleartext);
+int naechster = aufrufen(1);
+while (naechster != 10)
 	{
 		naechster = aufrufen(naechster);
 	}
