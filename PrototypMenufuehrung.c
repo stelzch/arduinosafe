@@ -27,12 +27,26 @@ typedef  void (*zfp)(void);
  int (*sssm)()=&SSSMenu;
 */
 
+/*
+ * So könnte das aussehen, dass die Implementierungen der hardwareabhängigen
+ * Programmteile in verschiedene Dateien ausgelagert werden:
+ * 
+#ifdef ARDUINO
+#include ui-arduino.c
+#else
+#include ui-konsole.c
+#endif
+
+* Noch besser wäre möglicherweise, das erst den Linker entscheiden zu lassen.
+*/
+
 void ausgabe(char zeile1[], char zeile2[])
 {
 	printf("%s",zeile1);
 	printf("\n");
 	printf("%s",zeile2);
 }
+
 void eingabe()
 {
 	fgets(tempRueckgabe, 50, stdin);
@@ -71,6 +85,7 @@ int hauptmenu()
 	int auswahl = showMenu(dasHauptMenu);
 	return auswahl;
 }
+
 int obstMenu(){
 	char* dasMenuHeute[] = { "Was willst du essen?", "Apfel", "Birne", "Banane", "Mango", "Kiwi", "Zurueck", "" };
 	int auswahl = showMenu(dasMenuHeute);
@@ -135,6 +150,20 @@ int aufrufen(int auswahl){
 }
 
 
+#ifdef ARDUINO
+
+int naechster;
+void setup() {
+    naechster = 0;
+}
+
+void loop() {
+  
+    naechster = aufrufen(naechster);
+  
+}
+
+#else
 
 int main(){
 	int naechster = aufrufen(0);
@@ -144,4 +173,6 @@ int main(){
 	}
 	return 0;
 }
+
+#ifdef ARDUINO
 
