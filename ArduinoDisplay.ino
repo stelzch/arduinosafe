@@ -27,7 +27,10 @@ void loop()
    
    char* eintraege[] = {"Menue", "Baskettball", "Kiwi", "AlleFischeBlubb"};
    showMenu(eintraege);
+   delay(2000);
 }
+
+
 
 void schreibeZeile1(char content[])
 {
@@ -54,11 +57,16 @@ void showMenu(char* entries[])
 	while (*(entries[i]) != 0)
 	{
 		schreibeZeile2(entries[i]);
-                if(digitalRead(buttonPin) == true)
-                {
-                  i++;
-                  delay(1000);
-                }
+                while(digitalRead(buttonPin) == false) 
+                { } ;
+                i ++ ;
+                delay (400);
+                
+//                if(digitalRead(buttonPin) == true)
+//                {
+//                  i++;
+//                  delay(500);
+//                }
 	}
 
         lcd.clear();
