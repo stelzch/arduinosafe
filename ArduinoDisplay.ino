@@ -1,31 +1,23 @@
 #include <Bounce2.h>
 #include <LiquidCrystal.h> //http://engineeringlearning.blogspot.de/2013/10/interfacing-lcd-without-potentiometer.html
 
-#define weiterBtnPin 7
-#define zurueckBtnPin 10
+#define rightBtnPin 7
+#define leftBtnPin 10
 #define okBtnPin 8
-#define aufwaertsBtnPin 9
+#define backBtnPin 9
 
 char ch;
 int Contrast=15;
-int i = 1;
-
-
-char* eintraege[] = {"Menue", "Passwort-Auswahl", "AFA", "MPasswort aendern", "Kiwi", ""};
-
-
-char* test[0];
-
+char alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+char* mainMenu[] = {"Menue", "Passwort-Auswahl", "AFA", "MPasswort aendern", "Kiwi", ""};
 // inits
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 
-Bounce weiterBtn = Bounce(); 
-Bounce zurueckBtn = Bounce(); 
+Bounce rightBtn = Bounce(); 
+Bounce leftBtn = Bounce(); 
 Bounce okBtn = Bounce(); 
-Bounce aufwaertsBtn = Bounce(); 
-
-
+Bounce backBtn = Bounce(); 
 
 void setup()
 {
@@ -36,25 +28,30 @@ void setup()
   delay(1000);
   digitalWrite(13,HIGH);
 
-  weiterBtn.attach(weiterBtnPin);
-  weiterBtn.interval(5);
+  rightBtn.attach(rightBtnPin);
+  rightBtn.interval(5);
 
-  zurueckBtn.attach(zurueckBtnPin);
-  zurueckBtn.interval(5);
+  leftBtn.attach(leftBtnPin);
+  leftBtn.interval(5);
 
   okBtn.attach(okBtnPin);
   okBtn.interval(5);
 
-  aufwaertsBtn.attach(aufwaertsBtnPin);
-  aufwaertsBtn.interval(5);
+  backBtn.attach(backBtnPin);
+  backBtn.interval(5);
 }
 
 void loop()
 {
-  Serial.println(showMenu(eintraege));
+  Serial.println(showMenu(mainMenu));
 }
 
-int groesseArray(char* array[])
+int sizeArray(char array[])
+{
+  return sizeof(array)/sizeof(char);
+}
+
+int sizeArray(char* array[])
 {
   int y = 0;
   while (*(array[y]) != 0)
@@ -64,7 +61,7 @@ int groesseArray(char* array[])
   return y;
 }
 
-void schreibeZeile1(char content[])
+void writeLine1(char content[])
 {
   lcd.setCursor(0, 0);
   lcd.print("                ");
@@ -72,7 +69,7 @@ void schreibeZeile1(char content[])
   lcd.print(content);
 }
 
-void schreibeZeile2(char content[])
+void writeLine2(char content[])
 {
   lcd.setCursor(0, 1);
   lcd.print("                ");
@@ -80,24 +77,65 @@ void schreibeZeile2(char content[])
   lcd.print(content);
 }
 
-char* eingabe()
+//---------------------------------------------------------------
+
+
+
+
+boolean xSecSwitch(Bounce btn, int howLong)
 {
+  unsigned long timer = millis();
+  while(btn.read());
+  timer = millis() - timer;
   
+  return(timer >= howLong*1000);
 }
+
+char* input(char* headline, char* alphabet, int inputLenght)  //inputLengh > 7
+{
+  char buffer[inputLenght];
+  char output[7];
+  int i = 0;
+  int p = 0;
+  int alphabetLenght = sizeArray(alphabet);
+  int start = 0;
+  
+  writeLine1(headline);
+  
+  while(i < inputLenght)
+  {
+    //--------------Ausgabe letzter 7 Ziffern
+    start = i - 7;
+    if (i < 0) start = 0;
+    
+    for (int y = 0; y<7; y++)
+    {
+      output[y] = buffer[start + y];      
+    }  
+    
+    //--------------Scrolling
+    
+    //Note: negativer Modulo?!!!!!!!!!!!!!!
+    
+  }
+}
+
+//---------------------------------------------------------------
 
 int showMenu(char* entries[])
 {
-  schreibeZeile1(entries[0]);
-  boolean endeSchleife = false;
+  writeLine1(entries[0]);
+  boolean endLoop = false;
   int rueckgabe;
+  int i = 1;
   
-  while (endeSchleife == false)
+  while (endLoop == false)
   {
-    schreibeZeile2(entries[i]);
+    writeLine2(entries[i]);
 
-    while(weiterBtn.update() == 0 && zurueckBtn.update() == 0 && okBtn.update() == 0 && aufwaertsBtn.update() == 0);
+    while(rightBtn.update() == 0 && leftBtn.update() == 0 && okBtn.update() == 0 && backBtn.update() == 0);
 
-    if(weiterBtn.read() == 1)
+    if(rightBtn.read() == 1)
     {
       i++;
       if (*(entries[i]) == 0)
@@ -106,22 +144,21 @@ int showMenu(char* entries[])
       }
     }
 
-    if (zurueckBtn.read() == 1)
+    if (leftBtn.read() == 1)
     {
       i--;
       if (i == 0)
       {
-        i = groesseArray(entries) - 1;
+        i = sizeArray(entries) - 1;
       }
     }
 
     if (okBtn.read() == 1)
     {
-      //schreibeZeile1(entries[i]);
-      endeSchleife = true;
+      //writeLine1(entries[i]);
+      endLoop = true;
     }
   }
   lcd.clear();
   return i;
 }
-
