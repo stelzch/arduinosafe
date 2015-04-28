@@ -43,7 +43,10 @@ void setup()
 
 void loop()
 {
-  Serial.println(showMenu(mainMenu));
+  if(showMenu(mainMenu) == 2)
+  {
+    input("HalloWelt", alphabet, 15);
+  }
 }
 
 int sizeArray(char array[])
@@ -69,11 +72,23 @@ void writeLine1(char content[])
   lcd.print(content);
 }
 
+void writeLine1(char content[], int pos)
+{
+  lcd.setCursor(pos, 0);
+  lcd.print(content);
+}
+
 void writeLine2(char content[])
 {
   lcd.setCursor(0, 1);
   lcd.print("                ");
   lcd.setCursor(0, 1);
+  lcd.print(content);
+}
+
+void writeLine2(char content[], int pos)
+{
+  lcd.setCursor(pos, 1);
   lcd.print(content);
 }
 
@@ -91,18 +106,22 @@ boolean xSecSwitch(Bounce btn, int howLong)
   return(timer >= howLong*1000);
 }
 
-char* input(char* headline, char* alphabet, int inputLenght)  //inputLengh > 7
+char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
 {
-  char buffer[inputLenght];
-  char output[7];
+  char buffer[inputLength];
+  char scroll[8] = "";
+  char output[8] = "";
+  int pos = 0;
   int i = 0;
-  int p = 0;
-  int alphabetLenght = sizeArray(alphabet);
+  int p; //Hilfsvar
+  int alphabetLength =  62;           //sizeArray(alphabet);
   int start = 0;
+  
+  Serial.println("laenge Alpha. :" + alphabetLength);
   
   writeLine1(headline);
   
-  while(i < inputLenght)
+  while(i < inputLength)
   {
     //--------------Ausgabe letzter 7 Ziffern
     start = i - 7;
@@ -110,12 +129,61 @@ char* input(char* headline, char* alphabet, int inputLenght)  //inputLengh > 7
     
     for (int y = 0; y<7; y++)
     {
-      output[y] = buffer[start + y];      
+      output[y] = buffer[start + y];      //leer machen
     }  
+    output[7] = '\0';
     
     //--------------Scrolling
     
-    //Note: negativer Modulo?!!!!!!!!!!!!!!
+    int z = 0;
+    
+    for(int y = 3; y >= 0; y--)
+    {
+      if(pos-y < 0)
+      {
+        p = alphabetLength - y;
+      }else{
+        p = pos-y;
+      }
+      
+      scroll[z] = alphabet[p];      
+      z++;
+    }
+    
+    scroll[7] = '\0';
+    
+    for(int y = 1; y <= 3; y++)
+    {
+      if(pos+y > alphabetLength-1)
+      {
+        p = (pos+y) - alphabetLength;
+      }else{
+        p = pos + y;
+      }
+      
+      scroll[z] = alphabet[p];      
+      z++;
+    }
+    writeLine2(scroll, 9);
+    writeLine2("||", 7);
+    
+ //   Serial.println(scroll + '|' + pos);
+    
+    //--------------
+    
+    while(rightBtn.update() == 0 && leftBtn.update() == 0 && okBtn.update() == 0 && backBtn.update() == 0);
+    
+    if(rightBtn.read() == 1)
+    {
+      pos++;
+    }
+
+    if (leftBtn.read() == 1)
+    {
+      pos--;
+    }
+    
+    //--------------
     
   }
 }
