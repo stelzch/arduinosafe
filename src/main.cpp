@@ -1,12 +1,14 @@
-#include "userinterfaces/windows.h"
+#include "krypto/aes256.h"
+#include <iostream>
+#include <string>
+
+using namespace std;
 
 int main() {
-	WindowsUserInterface ui;
-	string entry[2];
-	entry[0] = "Entry 1";
-	entry[1] = "Entry 2";
-	entry[2] = "Entry 3";
-	int sel = ui.selectFromList("Select please", entry, 3);
-	cout << entry[sel] << " was selected";
+	AES256Krypto *krypto = new AES256Krypto("Testdfffffffffffffffffffffffffffffffffffffffffffffffff");
+	
+	string dec = krypto->decrypt(krypto->encrypt("01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"));
+	
+	cout << dec << endl;
 	return 0;
 }

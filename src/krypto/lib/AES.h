@@ -1,7 +1,9 @@
 #ifndef __AES_H__
 #define __AES_H__
 
+#ifdef ARDUINO
 #include <avr/pgmspace.h>
+#endif
 /*
  ---------------------------------------------------------------------------
  Copyright (c) 1998-2008, Brian Gladman, Worcester, UK. All rights reserved.

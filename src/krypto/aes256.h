@@ -1,7 +1,7 @@
 #ifndef AES256_H_
 #define AES256_H_
 
-#include "lib/aes256.h"
+#include "lib/AES.h"
 #include "krypto.h"
 #include <string>
 
@@ -12,7 +12,7 @@ public:
 	string decrypt(string txt);
 	virtual ~AES256Krypto();
 private:
-	aes256_context ctx;
+	AES ctx;
 };
 
 #endif

@@ -60,8 +60,12 @@
 
 #define WPOLY   0x011B
 #define DPOLY   0x008D
+#ifndef ARDUINO
+#define PROGMEM
+#endif
 
 const static byte s_fwd [0x100] PROGMEM =
+
 {
   0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
   0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
@@ -108,14 +112,22 @@ const static byte s_inv [0x100] PROGMEM =
 static byte s_box (byte x)
 {
   //  return fwd_affine (pgm_read_byte (&inv [x])) ;
-  return pgm_read_byte (& s_fwd [x]) ;
+#ifdef ARDUINO
+	return pgm_read_byte (& s_fwd [x]) ;
+#else
+	return s_fwd [x];
+#endif
 }
 
 // Inverse Sbox
 static byte is_box (byte x)
 {
+#ifdef ARDUINO
   // return pgm_read_byte (&inv [inv_affine (x)]) ;
   return pgm_read_byte (& s_inv [x]) ;
+#else
+  return s_inv [x];
+#endif
 }
 
 
