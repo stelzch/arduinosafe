@@ -1,15 +1,12 @@
 #include "lib/AES.h"
 #include "aes256.h"
-#include <cstring>
-#include <iostream>
-#include <stdlib.h>
-#include <cstring>
+#include "../compat.h"
 
 using namespace std;
 
 AES256Krypto::AES256Krypto(string key) {
     if(key.length() < 32) {
-      cerr << "Schlüssel zu kurz" << endl;
+      //log("Schlüssel zu kurz");
       exit(-1);
     }
     byte *bytekey = const_cast<byte *>(reinterpret_cast<const byte*>(key.c_str()));
@@ -42,7 +39,7 @@ string AES256Krypto::decrypt(string txt) {
   int txtLength = txt.length();
   int numDecryptions = txtLength / 16;
   if((txtLength % 16) > 0) {
-    cerr << "AES Decrypt: Corrupted string - Length not divisible by 16" << endl;
+    //log("AES Decrypt: Corrupted string - Length not divisible by 16");
     exit(1);
   }
   for(int i=0;i<numDecryptions;i++) {

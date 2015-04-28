@@ -3,7 +3,8 @@
 
 #include "lib/AES.h"
 #include "krypto.h"
-#include <string>
+
+#include "../compat.h"
 
 class AES256Krypto : public Krypto {
 public:

@@ -1,4 +1,4 @@
-CXX=g++ -ggdb
+CXX=g++
 SRCDIR=src
 OBJDIR=$(SRCDIR)/obj
 EXE=$(OBJDIR)/main

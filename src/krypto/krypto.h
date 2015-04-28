@@ -1,8 +1,7 @@
 #ifndef KRYPTO_H_
 #define KRYPTO_H_
 
-#include <string>
-using std::string;
+#include "../compat.h"
 
 class Krypto {
 public:

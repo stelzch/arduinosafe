@@ -1,0 +1,4 @@
+BOARD = uno
+MONITOR_PORT = /dev/ttyACM0
+SOURCES = src/main.cpp src/krypto/aes256.cpp src/krypto/lib/AES.cpp
+include ./arduino.mk
