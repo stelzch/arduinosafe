@@ -32,7 +32,7 @@ void setup()
 	rightBtn.interval(5);
 
 	leftBtn.attach(leftBtnPin);
-	leftBtn.interval(5);
+	leftBtn.interval(5);                //da falsch verkabelt
 
 	okBtn.attach(okBtnPin);
 	okBtn.interval(5);
@@ -88,8 +88,10 @@ void writeLine2(char content[])
 
 void writeLine2(char content[], int pos)
 {
+
 	lcd.setCursor(pos, 1);
 	lcd.print(content);
+
 }
 
 //---------------------------------------------------------------
@@ -113,6 +115,7 @@ char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
 	char output[8] = "";
 	int pos = 0;
 	int i = 0;
+        int pwdPos = 0;
 	int p; //Hilfsvar
 	int alphabetLength = 62;           //sizeArray(alphabet);
 	int start = 0;
@@ -124,7 +127,11 @@ char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
 	while (i < inputLength)
 	{
 		//--------------Ausgabe letzter 7 Ziffern
-		start = i - 7;
+		
+                lcd.setCursor(12,1);
+                lcd.cursor();
+                
+                start = i - 7;
 		if (i < 0) start = 0;
 		
 		int z = 6;
@@ -134,41 +141,8 @@ char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
 			output[y] = buffer[start + y];      //leer machen
 		}
 		output[7] = '\0';
-
-		//--------------Scrolling
-
-		
-
-		//for (int y = 3; y >= 0; y--)
-		//{
-		//	if (pos - y < 0)
-		//	{
-		//		p = alphabetLength - y;
-		//	}
-		//	else{
-		//		p = pos - y;
-		//	}
-
-		//	scroll[z] = alphabet[p];
-		//	z++;
-		//}
-
-		//scroll[7] = '\0';
-
-		//for (int y = 1; y <= 3; y++)
-		//{
-		//	if (pos + y > alphabetLength - 1)
-		//	{
-		//		p = (pos + y) - alphabetLength;
-		//	}
-		//	else{
-		//		p = pos + y;
-		//	}
-
-		//	scroll[z] = alphabet[p];
-		//	z++;
-		//}
-
+                
+                
 		for (int y = -3; y <= 3; y++)
 		{
 			if (pos - y < 0)
@@ -192,7 +166,9 @@ char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
 		scroll[7] = '\0';
 		writeLine2(scroll, 9);
 		writeLine2("||", 7);
-
+                
+                lcd.setCursor(12,1);
+                
 		//   Serial.println(scroll + '|' + pos);
 
 		//--------------
@@ -211,12 +187,17 @@ char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
 
 		if (pos < 0)
 		{
-			pos = alphabetLength - abs(pos);
+			pos = (alphabetLength-1) - abs(pos);
 		}
 		if (pos > alphabetLength - 1)
 		{
 			pos = pos - alphabetLength;
 		}
+                
+                if(okBtn.read() == 1)
+                {
+                  buffer[pwdPos] = alphabet[pos];
+                }
 		//--------------
 
 	}
