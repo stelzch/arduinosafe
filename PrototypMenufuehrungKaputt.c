@@ -124,7 +124,8 @@ int aufrufen(int auswahl){
 	switch (auswahl)
 	{
 	case 0:
-		return hauptmenu();
+		return kc(); //4fkingdebugging
+		//return hauptmenu();
 		break;
 	case 1:
 		return MasterPWEingabe();
@@ -132,6 +133,9 @@ int aufrufen(int auswahl){
 	/* case 2:
 		return pwdAuswahl();
 		break; */
+	case 3:
+		return kc(); 
+		break;
 	}
 }
  //einlesen des pws
@@ -142,11 +146,42 @@ int readpwchiffred(){
     fscanf (pwd, "%1000c", pwchiffred);
     pwchiffred[1000] = '\0';
     printf ("%s\n", pwchiffred);
+    fclose(pwd);
   }
-
+  
 }
+//neues pw mit acc erstellen
+int kc(){
+   pwd=fopen("Nutzlos","W"); 
+  if (pwd != NULL){
+  char s[100];
+  char u[100];
+  char pw[100];
+  int x;
+  ausgabe("Service","");
+  eingabe();
+  fprintf(pwd,"\n%s",tempRueckgabe);
+  /*
+  while(x != 49){
+  s[x] = tempRueckgabe[x];
+  x++;
+  }*/
+  
+  ausgabe("Username","");
+  eingabe();
+  fprintf(pwd,"\n%s",tempRueckgabe);
+  
+  ausgabe("Password","");
+  eingabe();
+  fprintf(pwd,"\n%s",tempRueckgabe);
+  
+  // readpwchiffred();
 
-
+   
+  }else{
+    printf("Fehler beim Datein einlesen");
+  }
+}
 /* 
 int unchiffer(char* catounchiffre[], char* destca){
 int i;
@@ -166,15 +201,16 @@ int main(){
 int i=0;
 int useless;
 //for(i=0; i < sizeof pwchiffred; ++i){ 
-  while(i < sizeof pwchiffred){
+
+/*  while(i < sizeof pwchiffred){
     
  useless=pwchiffred[i]-4;
  pwcleartext[i]= useless;
  i++;
-}
+} */
 
 printf("%s\n", pwcleartext);
-int naechster = aufrufen(1);
+int naechster = aufrufen(0); //zum debugging o statt 1
 while (naechster != 10)
 	{
 		naechster = aufrufen(naechster);
