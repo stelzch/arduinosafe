@@ -18,7 +18,11 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 #define BUTTON_RIGHT 2
 #define BUTTON_SELECT 3
 #define BUTTON_UP 4
-#define BUTTON_LEFT 5
+#define BUTTON_LEFT 
+
+const int LINE_HIGH = 8
+const int X_START_POSOTION = 0
+const int Y_START_POSOTION = 0
 
 char ch;
 char alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -53,10 +57,11 @@ uint8_t readButton(void) {
 
 void loop()
 {
-	if (showMenu(mainMenu) == 2)
-	{
-		input("HalloWelt", alphabet, 15);
-	}
+  writeList();
+//	if (showMenu(mainMenu) == 2)
+//	{
+//		input("HalloWelt", alphabet, 15);
+//	}
 }
 
 int sizeArray(char array[])
@@ -102,6 +107,20 @@ void writeLine2(char content[], int pos)
 	tft.print(content);
 }
 
+//void writeList(char content[][]) {
+//   tft.setCursor(0, 15);
+//   for (int i = 0; i < conent
+//   tft.print()
+//}
+
+void writeList(char content[][], int numberRows) {
+   tft.setCursor(0, 0);
+   for (int i = 0; i < numberRows; i++) {
+      tft.print(content[i]);
+      tft.print("\n")
+   }
+   
+}
 //---------------------------------------------------------------
 
 
@@ -124,7 +143,9 @@ char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
         writeLine1(headline);
         writeLine2(scroll, 9);
 	writeLine2("||", 7);
-
+        for (int i = 0; i < inputLength; i++){
+          buffer[i] = ' ';
+        }
 	while (i < inputLength)
 	{
 		//--------------Ausgabe letzter 7 Ziffern
