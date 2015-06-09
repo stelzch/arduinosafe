@@ -1,5 +1,13 @@
 #include <stdio.h>
-
+/* DEBUG */
+char EEPROM_read(int pos) {
+  char *mpw = "Masterpasswort";
+  return mpw[pos];
+}
+char *userinput() {
+  char *text;
+  scanf("%s",text);
+}
 /*   PROTOTYPES   */
 int callState(int);
 int enterMasterPassword();
@@ -11,6 +19,8 @@ int enterPW();
 int generatePW();
 int editPW();
 int editMPW();
+
+const int MAX_MPW_LENGTH = 31;
 
 enum STATE {
   ENTER_MASTER_PASSWORD,
@@ -27,8 +37,16 @@ enum STATE {
 typedef int (*StateFunction)(void) ;
 StateFunction stateArray[] = {
   &enterMasterPassword,
-  &mainMenu
+  &mainMenu,
+  &selectPW,
+  &displayPW,
+  &newPW,
+  &enterPW,
+  &generatePW,
+  &editPW,
+  &editMPW
 };
+
 struct Context {
   int selected_pw;
   int last_interaction;
@@ -36,7 +54,7 @@ struct Context {
    * TODO: Reference Password Database, User Interface
    */
   
-};
+} ctx;
 
 /*   MAIN         */
 int main() {
@@ -51,10 +69,28 @@ int callState(int s) {
 }
 /*   STATE FUNCTIONS */
 int enterMasterPassword() {
-  printf("ENTER_MASTER_PASSWORD\n");
-  return MAIN_MENU;
+  char *mpw = userinput();
+  char actual_mpw[MAX_MPW_LENGTH];
+  char tmp;
+  int pos = 0;
+  while ((tmp = EEPROM_read(pos++)) != '\0') {
+    actual_mpw[pos] = tmp;
+  }
+  actual_mpw[pos] = '\0';
+  if (strcmp(mpw, actual_mpw) == 0) {
+    return MAIN_MENU; 
+  }
+  return ENTER_MASTER_PASSWORD;
 }
 int mainMenu() {
   printf("MAIN_MENU\n");
   return ENTER_MASTER_PASSWORD;
 }
+/*
+int selectPW() {}
+int displayPW() {}
+int newPW(){}
+int enterPW(){}
+int generatePW(){}
+int editPW();
+int editMPW(); */
