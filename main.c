@@ -11,7 +11,8 @@ char EEPROM_read(int pos) {
   char *mpw = "Masterpasswort";
   return mpw[pos];
 }
-char *userinput() {
+
+char *userinput(char* headline, int inputLength) {
   char *text;
   scanf("%s",text);
 }
@@ -29,6 +30,10 @@ char** db_listTitles() {
   char* titleList[] = {"facebook user", "google user", "mac user"};
   return titleList;
 }
+void db_newPW(char* newServiceName, char* newUsername, char* newPW){
+
+}
+
 struct DBEntry db_getEntry(int id) {
   struct DBEntry entry;
   entry.id = id;
@@ -45,10 +50,11 @@ int mainMenu();
 int selectPW();
 int displayPW();
 int newPW();
-int enterPW();
-int generatePW();
 int editPW();
 int editMPW();
+
+char* enterPW();
+char* generatePW();
 
 const int MAX_MPW_LENGTH = 31;
 
@@ -58,8 +64,6 @@ enum STATE {
   SELECT_PW,
   DISPLAY_PW,
   NEW_PW,
-  ENTER_PW,
-  GENERATE_PW,
   EDIT_PW,
   EDIT_MPW
 };
@@ -71,8 +75,6 @@ StateFunction stateArray[] = {
   &selectPW,
   &displayPW,
   &newPW,
-  &enterPW,
-  &generatePW,
   &editPW,
   &editMPW
 };
@@ -99,7 +101,8 @@ int callState(int s) {
 }
 /*   STATE FUNCTIONS */
 int enterMasterPassword() {
-  char *mpw = userinput();
+  char *headline = "MPW eingeben";
+  char *mpw = userinput(headline, 64);
   char actual_mpw[MAX_MPW_LENGTH];
   char tmp;
   int pos = 0;
@@ -158,9 +161,33 @@ int displayPW() {
   return DISPLAY_PW;
 }
 int newPW(){
-
+  char title[] = "Neues PW";
+  char* headline = "servicename";
+  char* newServiceName = userinput(headline, 64);
+  headline = "username";
+  char* newUsername = userinput(headline, 64);
+  headline = "Eingabetyp waehlen";
+  char* PWNewEntries[] = {"PW generieren", 
+			   "PW eingeben"};
+  int ret = showMenu(headline, PWNewEntries);
+  if (ret < 0){
+    return DISPLAY_PW;
+  }
+  char* newPW;
+  switch (ret){
+  case 0: newPW = generatePW();
+  case 1: newPW = enterPW();
+  }
+  db_newPW(newServiceName, newUsername, newPW);
+  return MAIN_MENU;
 }
-int enterPW(){}
-int generatePW(){}
+
 int editPW(){}
 int editMPW(){}
+
+
+char* enterPW(){}
+char* generatePW(){}
+
+
+
