@@ -1,13 +1,48 @@
+
 #include <stdio.h>
 /* DEBUG */
+struct DBEntry {
+  int id;
+  char *pw;
+  char *username;
+  char *service;
+};
 char EEPROM_read(int pos) {
   char *mpw = "Masterpasswort";
   return mpw[pos];
 }
-char *userinput() {
+
+char *userinput(char* headline, int inputLength) {
   char *text;
   scanf("%s",text);
 }
+int showMenu(char title[], char *entries[]) {
+  return 0;
+}
+void keyboard_send(char text[]) {
+  printf("%s\n", text);
+}
+void display(char text[]) {
+  printf("%s\n", text);
+}
+char** db_listTitles() {
+  // TODO: IDs
+  char* titleList[] = {"facebook user", "google user", "mac user"};
+  return titleList;
+}
+void db_newPW(char* newServiceName, char* newUsername, char* newPW){
+
+}
+
+struct DBEntry db_getEntry(int id) {
+  struct DBEntry entry;
+  entry.id = id;
+  entry.pw = "password";
+  entry.username = "username";
+  entry.service = "muster";
+  return entry;
+}
+
 /*   PROTOTYPES   */
 int callState(int);
 int enterMasterPassword();
@@ -15,10 +50,11 @@ int mainMenu();
 int selectPW();
 int displayPW();
 int newPW();
-int enterPW();
-int generatePW();
 int editPW();
 int editMPW();
+
+char* enterPW();
+char* generatePW();
 
 const int MAX_MPW_LENGTH = 31;
 
@@ -28,8 +64,6 @@ enum STATE {
   SELECT_PW,
   DISPLAY_PW,
   NEW_PW,
-  ENTER_PW,
-  GENERATE_PW,
   EDIT_PW,
   EDIT_MPW
 };
@@ -41,8 +75,6 @@ StateFunction stateArray[] = {
   &selectPW,
   &displayPW,
   &newPW,
-  &enterPW,
-  &generatePW,
   &editPW,
   &editMPW
 };
@@ -69,7 +101,8 @@ int callState(int s) {
 }
 /*   STATE FUNCTIONS */
 int enterMasterPassword() {
-  char *mpw = userinput();
+  char *headline = "MPW eingeben";
+  char *mpw = userinput(headline, 64);
   char actual_mpw[MAX_MPW_LENGTH];
   char tmp;
   int pos = 0;
@@ -84,13 +117,77 @@ int enterMasterPassword() {
 }
 int mainMenu() {
   printf("MAIN_MENU\n");
-  return ENTER_MASTER_PASSWORD;
+  char title[] = "Hauptmenue";			     
+  char *mainMenuEntries[] = {"PW-Auswahl",
+			     "Neues PW",
+			     "MPW aendern"};
+  int ret = showMenu(title, mainMenuEntries);
+  
+  switch (ret) {
+  case 0: return SELECT_PW;
+  case 1: return NEW_PW;
+  case 2: return EDIT_MPW;
+  default: return MAIN_MENU;
+  }
+  
+  return MAIN_MENU;
 }
-/*
-int selectPW() {}
-int displayPW() {}
-int newPW(){}
-int enterPW(){}
-int generatePW(){}
-int editPW();
-int editMPW(); */
+int selectPW() {
+  char title[] = "PW Auswahl";
+  int ret = showMenu(title, db_listTitles());
+  if (ret < 0) {
+    return MAIN_MENU;
+  }
+  ctx.selected_pw = ret;
+  return DISPLAY_PW;
+}
+int displayPW() {
+  struct DBEntry entry = db_getEntry(ctx.selected_pw);
+  char *title = entry.service;
+  char *displayPWEntries[] = {"PW senden",
+			      "Benutzername senden",
+			      "PW anzeigen",
+			      "PW aendern"};
+  int ret = showMenu(title, displayPWEntries);
+  if (ret < 0) {
+    return SELECT_PW;
+  }
+  switch (ret) {
+  case 0: keyboard_send(entry.pw);
+  case 1: keyboard_send(entry.username);
+  case 2: display(entry.pw);
+  case 3: return EDIT_PW;
+  }
+  return DISPLAY_PW;
+}
+int newPW(){
+  char title[] = "Neues PW";
+  char* headline = "servicename";
+  char* newServiceName = userinput(headline, 64);
+  headline = "username";
+  char* newUsername = userinput(headline, 64);
+  headline = "Eingabetyp waehlen";
+  char* PWNewEntries[] = {"PW generieren", 
+			   "PW eingeben"};
+  int ret = showMenu(headline, PWNewEntries);
+  if (ret < 0){
+    return DISPLAY_PW;
+  }
+  char* newPW;
+  switch (ret){
+  case 0: newPW = generatePW();
+  case 1: newPW = enterPW();
+  }
+  db_newPW(newServiceName, newUsername, newPW);
+  return MAIN_MENU;
+}
+
+int editPW(){}
+int editMPW(){}
+
+
+char* enterPW(){}
+char* generatePW(){}
+
+
+
