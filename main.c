@@ -18,6 +18,12 @@ char *userinput() {
 int showMenu(char title[], char *entries[]) {
   return 0;
 }
+void keyboard_send(char text[]) {
+  printf("%s\n", text);
+}
+void display(char text[]) {
+  printf("%s\n", text);
+}
 char** db_listTitles() {
   // TODO: IDs
   char* titleList[] = {"facebook user", "google user", "mac user"};
@@ -136,12 +142,24 @@ int displayPW() {
   struct DBEntry entry = db_getEntry(ctx.selected_pw);
   char *title = entry.service;
   char *displayPWEntries[] = {"PW senden",
-			    "Benutzername senden",
-			    "PW anzeigen"};
+			      "Benutzername senden",
+			      "PW anzeigen",
+			      "PW aendern"};
   int ret = showMenu(title, displayPWEntries);
-  return 0;
+  if (ret < 0) {
+    return SELECT_PW;
+  }
+  switch (ret) {
+  case 0: keyboard_send(entry.pw);
+  case 1: keyboard_send(entry.username);
+  case 2: display(entry.pw);
+  case 3: return EDIT_PW;
+  }
+  return DISPLAY_PW;
 }
-int newPW(){}
+int newPW(){
+
+}
 int enterPW(){}
 int generatePW(){}
 int editPW(){}
