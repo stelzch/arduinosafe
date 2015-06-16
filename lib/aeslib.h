@@ -3,6 +3,7 @@
 #ifdef ARDUINO
 #include <avr/pgmspace.h>
 #endif
+#include "tools.h"
 /*
 ---------------------------------------------------------------------------
 Copyright (c) 1998-2008, Brian Gladman, Worcester, UK. All rights reserved.
@@ -24,7 +25,7 @@ Issue 09/09/2006
 This is an AES implementation that uses only 8-bit byte operations on the
 cipher state.
 */
-typedef unsigned char byte ;
+
 #define N_ROW 4
 #define N_COL 4
 #define N_BLOCK (N_ROW * N_COL)
