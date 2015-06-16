@@ -1,5 +1,12 @@
+
 #include <stdio.h>
 /* DEBUG */
+struct DBEntry {
+  int id;
+  char *pw;
+  char *username;
+  char *service;
+};
 char EEPROM_read(int pos) {
   char *mpw = "Masterpasswort";
   return mpw[pos];
@@ -8,6 +15,23 @@ char *userinput() {
   char *text;
   scanf("%s",text);
 }
+int showMenu(char title[], char *entries[]) {
+  return 0;
+}
+char** db_listTitles() {
+  // TODO: IDs
+  char* titleList[] = {"facebook user", "google user", "mac user"};
+  return titleList;
+}
+struct DBEntry db_getEntry(int id) {
+  struct DBEntry entry;
+  entry.id = id;
+  entry.pw = "password";
+  entry.username = "username";
+  entry.service = "muster";
+  return entry;
+}
+
 /*   PROTOTYPES   */
 int callState(int);
 int enterMasterPassword();
@@ -84,13 +108,41 @@ int enterMasterPassword() {
 }
 int mainMenu() {
   printf("MAIN_MENU\n");
-  return ENTER_MASTER_PASSWORD;
+  char title[] = "Hauptmenue";			     
+  char *mainMenuEntries[] = {"PW-Auswahl",
+			     "Neues PW",
+			     "MPW aendern"};
+  int ret = showMenu(title, mainMenuEntries);
+  
+  switch (ret) {
+  case 0: return SELECT_PW;
+  case 1: return NEW_PW;
+  case 2: return EDIT_MPW;
+  default: return MAIN_MENU;
+  }
+  
+  return MAIN_MENU;
 }
-/*
-int selectPW() {}
-int displayPW() {}
+int selectPW() {
+  char title[] = "PW Auswahl";
+  int ret = showMenu(title, db_listTitles());
+  if (ret < 0) {
+    return MAIN_MENU;
+  }
+  ctx.selected_pw = ret;
+  return DISPLAY_PW;
+}
+int displayPW() {
+  struct DBEntry entry = db_getEntry(ctx.selected_pw);
+  char *title = entry.service;
+  char *displayPWEntries[] = {"PW senden",
+			    "Benutzername senden",
+			    "PW anzeigen"};
+  int ret = showMenu(title, displayPWEntries);
+  return 0;
+}
 int newPW(){}
 int enterPW(){}
 int generatePW(){}
-int editPW();
-int editMPW(); */
+int editPW(){}
+int editMPW(){}
