@@ -9,7 +9,7 @@
 char ch;
 int Contrast = 15;
 char alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-char* mainMenu[] = { "Menue", "Passwort-Auswahl", "AFA", "MPasswort aendern", "Kiwi", "" };
+char* mainMenu[] = { "Menue", "Input-Demo", "Demo Eintrag", "Kiwi", "" };
 // inits
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
@@ -43,9 +43,20 @@ void setup()
 
 void loop()
 {
-	if (showMenu(mainMenu) == 2)
-	{
-		input("HalloWelt", alphabet, 15);
+	switch (showMenu(mainMenu))
+	
+        {
+          case 1:
+		Serial.println(input("HalloWelt", alphabet, 15));
+                break;
+          case 3:
+                while(true)
+                {
+                  writeLine1("Kiwi!Kiwi!Kiwi!");
+                  delay(120);
+                  writeLine1("                ");
+                  delay(120);
+                }
 	}
 }
 
@@ -116,14 +127,21 @@ boolean xSecSwitch(Bounce btn, int howLong)
 
 char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
 {
-	char buffer[inputLength];
+	char buffer[inputLength + 1];
+        buffer[inputLength] = '\0';
 	char scroll[8] = "";
 	char output[8] = "";
 	int pos = 0;
 	int i = 0;
 	int alphabetLength = 62;           //sizeArray(alphabet);
 	int start = 0;
-
+        
+        for(int z = 0; z < inputLength; z++)
+        {
+          buffer[z] = ' ';
+        }
+        
+        
 	Serial.println("laenge Alpha. :" + alphabetLength);
 
 	writeLine1(headline);
@@ -187,12 +205,51 @@ char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
                 
                 if(okBtn.read() == 1)
                 {
+                  int millisek = millis();
+                  while(okBtn.update() == 0) { };
+                  int time = (millis() - millisek)/1000;           //Zeit des Knopfdrückens in sek
+                  
+                  if(time < 2)
+                  {
+                    buffer[i] = alphabet[pos];
+                    i++;
+                  } else {
+                    
+                    char pwd[i];
+                    for(int y = 0; y < i; y++)
+                    {
+                       pwd[y] = buffer[y];
+                    }
+                    pwd[i] = '\0';
+                    
+                    return pwd;
+                  }
+                }
+                
+                
+                if(okBtn.read() == 1)
+                {
                   buffer[i] = alphabet[pos];
                   i++;
                 }
+                
+                if(backBtn.read() == 1)            //1 Zeichen löschen
+                {
+                  buffer[i-1] = ' ';
+                  i--; 
+                }
 		//--------------
-
 	}
+    
+    char pwd[i];
+    for(int y = 0; y < i; y++)
+    {
+      pwd[y] = buffer[y];
+    }
+    pwd[i] = '\0';    
+    Serial.print("S: ");
+    Serial.println(pwd);
+    return pwd;
 }
 
 //---------------------------------------------------------------
