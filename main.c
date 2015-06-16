@@ -34,6 +34,10 @@ void db_newPW(char* newServiceName, char* newUsername, char* newPW){
 
 }
 
+db_editPW(int id, char* newPW) {
+
+}
+
 struct DBEntry db_getEntry(int id) {
   struct DBEntry entry;
   entry.id = id;
@@ -168,7 +172,7 @@ int newPW(){
   char* newUsername = userinput(headline, 64);
   headline = "Eingabetyp waehlen";
   char* PWNewEntries[] = {"PW generieren", 
-			   "PW eingeben"};
+			  "PW eingeben"};
   int ret = showMenu(headline, PWNewEntries);
   if (ret < 0){
     return DISPLAY_PW;
@@ -181,8 +185,22 @@ int newPW(){
   db_newPW(newServiceName, newUsername, newPW);
   return MAIN_MENU;
 }
-
-int editPW(){}
+int editPW(){
+  char headline[] = "Eingabetyp waehlen";
+  char* editPWEntries[] = {"PW generieren", 
+			   "PW eingeben"};
+  int ret = showMenu(headline, editPWEntries);
+  if (ret < 0) {
+    return DISPLAY_PW;
+  }
+  char* newPW;
+  switch (ret){
+  case 0: newPW = generatePW();
+  case 1: newPW = enterPW();
+  }
+  db_editPW(ctx.selected_pw, newPW);
+  return DISPLAY_PW;
+}
 int editMPW(){}
 
 
