@@ -18,11 +18,11 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 #define BUTTON_RIGHT 2
 #define BUTTON_SELECT 3
 #define BUTTON_UP 4
-#define BUTTON_LEFT 
+#define BUTTON_LEFT 5
 
-const int LINE_HIGH = 8
-const int X_START_POSOTION = 0
-const int Y_START_POSOTION = 0
+const int LINE_HIGH = 8;
+const int X_START_POSOTION = 0;
+const int Y_START_POSOTION = 0;
 
 char ch;
 char alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
@@ -57,11 +57,9 @@ uint8_t readButton(void) {
 
 void loop()
 {
-  writeList();
-//	if (showMenu(mainMenu) == 2)
-//	{
-//		input("HalloWelt", alphabet, 15);
-//	}
+  if (showMenu(mainMenu) == 2)	{
+	input("HalloWelt", alphabet, 15);
+  }
 }
 
 int sizeArray(char array[])
@@ -113,14 +111,14 @@ void writeLine2(char content[], int pos)
 //   tft.print()
 //}
 
-void writeList(char content[][], int numberRows) {
-   tft.setCursor(0, 0);
-   for (int i = 0; i < numberRows; i++) {
-      tft.print(content[i]);
-      tft.print("\n")
-   }
-   
-}
+//void writeList(char content[][], int numberRows) {
+//   tft.setCursor(0, 0);
+//   for (int i = 0; i < numberRows; i++) {
+//      tft.print(content[i]);
+//      tft.print("\n")
+//   }
+//   
+//}
 //---------------------------------------------------------------
 
 
