@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 /* DEBUG */
 struct DBEntry {
@@ -12,12 +11,19 @@ char EEPROM_read(int pos) {
   return mpw[pos];
 }
 
-char *userinput(char* headline, int inputLength) {
-  char *text;
+char userinput(char* headline, int inputLength) {
+  char* text;
   scanf("%s",text);
+  printf("Text: %s\n", text);
+  return text;
 }
-int showMenu(char title[], char *entries[]) {
-  return 0;
+int showMenu(char title[], char** entries) {
+  printf("Eingabe: ");
+  char text[5];
+  scanf("%s",text);
+  int num = atoi(text);
+  printf("Num: %d\n", num);
+  return num;
 }
 void keyboard_send(char text[]) {
   printf("%s\n", text);
@@ -33,8 +39,10 @@ char** db_listTitles() {
 void db_newPW(char* newServiceName, char* newUsername, char* newPW){
 
 }
+void db_editPW(int id, char* newPW) {
 
-db_editPW(int id, char* newPW) {
+}
+void db_editMPW(char* newMPW) {
 
 }
 
@@ -114,13 +122,15 @@ int enterMasterPassword() {
     actual_mpw[pos] = tmp;
   }
   actual_mpw[pos] = '\0';
-  if (strcmp(mpw, actual_mpw) == 0) {
+  printf("Before compare\n");
+  if (/*strncmp(mpw, actual_mpw, pos)*/0 == 0) { // TODO: fix strcmp
     return MAIN_MENU; 
   }
+  printf("After compare\n");
   return ENTER_MASTER_PASSWORD;
 }
 int mainMenu() {
-  printf("MAIN_MENU\n");
+  printf("Main Menu\n");
   char title[] = "Hauptmenue";			     
   char *mainMenuEntries[] = {"PW-Auswahl",
 			     "Neues PW",
@@ -137,6 +147,7 @@ int mainMenu() {
   return MAIN_MENU;
 }
 int selectPW() {
+  printf("Select PW\n");
   char title[] = "PW Auswahl";
   int ret = showMenu(title, db_listTitles());
   if (ret < 0) {
@@ -146,6 +157,7 @@ int selectPW() {
   return DISPLAY_PW;
 }
 int displayPW() {
+  printf("Display PW\n");
   struct DBEntry entry = db_getEntry(ctx.selected_pw);
   char *title = entry.service;
   char *displayPWEntries[] = {"PW senden",
@@ -157,14 +169,15 @@ int displayPW() {
     return SELECT_PW;
   }
   switch (ret) {
-  case 0: keyboard_send(entry.pw);
-  case 1: keyboard_send(entry.username);
-  case 2: display(entry.pw);
+  case 0: keyboard_send(entry.pw);break;
+  case 1: keyboard_send(entry.username);break;
+  case 2: display(entry.pw);break;
   case 3: return EDIT_PW;
   }
   return DISPLAY_PW;
 }
 int newPW(){
+  printf("New PW\n");
   char title[] = "Neues PW";
   char* headline = "servicename";
   char* newServiceName = userinput(headline, 64);
@@ -179,13 +192,14 @@ int newPW(){
   }
   char* newPW;
   switch (ret){
-  case 0: newPW = generatePW();
-  case 1: newPW = enterPW();
+  case 0: newPW = generatePW();break;
+  case 1: newPW = enterPW();break;
   }
   db_newPW(newServiceName, newUsername, newPW);
   return MAIN_MENU;
 }
 int editPW(){
+  printf("Edit PW\n");
   char headline[] = "Eingabetyp waehlen";
   char* editPWEntries[] = {"PW generieren", 
 			   "PW eingeben"};
@@ -195,17 +209,32 @@ int editPW(){
   }
   char* newPW;
   switch (ret){
-  case 0: newPW = generatePW();
-  case 1: newPW = enterPW();
+  case 0: newPW = generatePW();break;
+  case 1: newPW = enterPW();break;
   }
   db_editPW(ctx.selected_pw, newPW);
   return DISPLAY_PW;
 }
-int editMPW(){}
+int editMPW(){
+  printf("Edit MPW\n");
+  char* newMPW;
+  newMPW = enterPW();
+  db_editMPW(newMPW);
+  return MAIN_MENU;
+}
 
 
-char* enterPW(){}
-char* generatePW(){}
+char* enterPW(){
+  printf("Enter PW\n");
+  char headline[] = "Passwort eingeben";
+  char* pw = userinput(headline, 64);
+  return pw;
+}
+char* generatePW(){
+  printf("Generate PW\n");
+  char pw[] = "123456789012345";
+  return pw;
+}
 
 
 
