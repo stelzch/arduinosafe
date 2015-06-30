@@ -13,8 +13,10 @@ struct DBEntry db_getEntry(int id);
 
 /*
  * STORAGE FORMAT ON SD
- * 
- * 
- * 
- * 
+ * +--------+ +--------+ +--------+
+ * |USERNAME|0|SERVICE |0|Password|0
+ * +--------+ +--------+ +--------+
+ *           ^               ^
+ *           |               |
+ *         Null-byte       Exactly 64 bytes long
  */
