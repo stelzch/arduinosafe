@@ -67,10 +67,8 @@ uint8_t readButton(void) {
 
 int i = 0;
 void loop(){
-   if (showMenu(mainMenu) == 3) {
-     showMenu(mainMenu2);
-   
-   }
+    Serial.println(input("Test", alphabet, 16));
+
 }
 
 int sizeArray(char array[])
@@ -93,6 +91,10 @@ void highlightRaw (int n) { //n = 1 erste Zeile     n = 0 nichts markiert
     tftHL.setCursor(0, Y_START_POSOTION + (n-1)*LINE_HIGH);
     tftHL.print("->");
 }
+
+void highlightChar (int i) { //erster Buchstabe = 1
+    
+}
 void writeList(char* content[]) {
    int arraySize = sizeArray(content);
    for (int i = 0; i < arraySize; i++) {
@@ -100,110 +102,13 @@ void writeList(char* content[]) {
      tft.print(content[i]);
    }
 }
-//---------------------------------------------------------------
 
-//
-//char* input(char* headline, char* alphabet, int inputLength) //inputLength > 7
-//{
-//  char buffer[inputLength + 1];
-//  buffer[inputLength] = '\0';
-//  char scroll[8] = "";
-//  char output[8] = "";
-//  int pos = 0;
-//  int i = 0;
-//  int alphabetLength = 62; //sizeArray(alphabet);
-//  int start = 0;
-//  for(int z = 0; z < inputLength; z++)
-//{
-//  buffer[z] = ' ';
-//}
-//  Serial.println("laenge Alpha. :" + alphabetLength);
-//  tft.setCursor(0, 0);
-//  tft.println(headline);
-//  while (i < inputLength)
-//{
-//// 7 zeichen aus dem alphabet anzeigen
-//for(int y=-3; y<=3; y++)
-//{
-//int h = pos + y;
-//if(h<0)
-//{
-//h = alphabetLength + h;
-//}
-//else if(h>=alphabetLength)
-//{
-//h = h-alphabetLength;
-//}
-//scroll[y+3] = alphabet[h];
-//}
-//scroll[7] = '\0';
-//// ausgabe auf lcd
-//writeLine2(output, 0);
-//writeLine2("||", 7);
-//writeLine2(scroll, 9);
-//lcd.setCursor(12,1);
-//// knöpfe gedöns
-//while (rightBtn.update() == 0 && leftBtn.update() == 0 && okBtn.update() == 0 && backBtn.update() == 0);
-//if (rightBtn.read() == 1)
-//{
-//pos++;
-//}
-//if (leftBtn.read() == 1)
-//{
-//pos--;
-//}
-//if (pos < 0)
-//{
-//pos = (alphabetLength-1) - abs(pos);
-//}
-//else if (pos >= alphabetLength)
-//{
-//pos = pos - alphabetLength;
-//}
-//if(okBtn.read() == 1)
-//{
-//int millisek = millis();
-//while(okBtn.update() == 0) { };
-//int time = (millis() - millisek)/1000; //Zeit des Knopfdrückens in sek
-//if(time < 2)
-//{
-//buffer[i] = alphabet[pos];
-//i++;
-//} else {
-//char pwd[i];
-//for(int y = 0; y < i; y++)
-//{
-//pwd[y] = buffer[y];
-//}
-//pwd[i] = '\0';
-//return pwd;
-//}
-//}
-//if(okBtn.read() == 1)
-//{
-//buffer[i] = alphabet[pos];
-//i++;
-//}
-//if(backBtn.read() == 1) //1 Zeichen löschen
-//{
-//buffer[i-1] = ' ';
-//i--;
-//}
-////--------------
-//}
-//
-// char pwd[i];
-//for(int y = 0; y < i; y++)
-//{
-//pwd[y] = buffer[y];
-//}
-//pwd[i] = '\0';
-//Serial.print("S: ");
-//Serial.println(pwd);
-//return pwd;
-//}
+void writeHeadline(char* content) {
+   tft.setCursor(0, 0);
+   tft.print(content + '\n');
+}
 
-//---------------------------------------------------------------
+
 
 int showMenu(char* entries[])
 {
@@ -254,4 +159,94 @@ int showMenu(char* entries[])
                 Serial.println("A");
 	}
 	return i;
+}
+
+
+char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
+{
+
+	char buffer[inputLength + 1];
+        buffer[inputLength] = '\0';
+	int pos = 1;
+	int alphabetLength = 62;           //sizeArray(alphabet);
+        
+        for(int i = 0; i < inputLength; i++)
+        {
+          buffer[i] = ' ';
+        }
+        
+
+
+	int i = 0; //counter
+	while (i < inputLength)
+	{
+          tft.fillScreen(ST7735_BLACK);
+          Serial.println(headline);
+                writeHeadline(headline);
+                tft.println(buffer);
+                tft.println(alphabet);
+                
+                // knöpfe gedöns
+		while (readButton() == BUTTON_NONE);
+
+		if (readButton() == BUTTON_RIGHT){
+                   if (pos < alphabetLength) {
+                     pos++;
+                   }
+                   else {
+                    pos = 1; 
+                   }
+		}
+
+		if (readButton() == BUTTON_LEFT)
+		{
+			if (pos > 0) {
+                           pos--;
+                        }
+                        else {
+                           pos = alphabetLength; 
+                        }
+		}
+                
+                if(readButton() == BUTTON_SELECT)
+                {
+                  int millisek = millis();
+                  while(readButton() == BUTTON_SELECT) { };
+                  int time = (millis() - millisek);           //Zeit des Knopfdrückens in milis
+                  
+                  if(time < 2000)
+                  {
+                    buffer[i] = alphabet[pos-1];
+                    i++;
+                  } else {
+                    
+                    char pwd[i];
+                    for(int y = 0; y < i; y++)
+                    {
+                       pwd[y] = buffer[y];
+                    }
+                    pwd[i] = '\0';
+                    
+                    return pwd;
+                  }
+                }
+                
+                
+                if(readButton() == BUTTON_DOWN)            //1 Zeichen löschen
+                {
+                  buffer[i-1] = ' ';
+                  i--; 
+                }
+		//--------------
+	}
+    
+    char pwd[i];
+    for(int y = 0; y < i; y++)
+    {
+      pwd[y] = buffer[y];
+    }
+    pwd[i] = '\0';    
+    Serial.print("password: ");
+    Serial.println(pwd);
+    return pwd;
 }
