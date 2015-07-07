@@ -69,8 +69,8 @@ int i = 0;
 void loop(){
    if (showMenu(mainMenu) == 3) {
      showMenu(mainMenu2);
-   }
    
+   }
 }
 
 int sizeArray(char array[])
@@ -102,142 +102,105 @@ void writeList(char* content[]) {
 }
 //---------------------------------------------------------------
 
-
-//char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
+//
+//char* input(char* headline, char* alphabet, int inputLength) //inputLength > 7
 //{
-//        tft.fillScreen(ST7735_BLACK);
-//	char buffer[inputLength];
-//	char scroll[8] = "";
-//	char output[8] = "       ";
-//        int letter_pos = 0;
-//	int pos = 0;
-//	int i = 0;
-//	int p; //Hilfsvar
-//	int alphabetLength = 62;           //sizeArray(alphabet);
-//	int start = 0;
+//  char buffer[inputLength + 1];
+//  buffer[inputLength] = '\0';
+//  char scroll[8] = "";
+//  char output[8] = "";
+//  int pos = 0;
+//  int i = 0;
+//  int alphabetLength = 62; //sizeArray(alphabet);
+//  int start = 0;
+//  for(int z = 0; z < inputLength; z++)
+//{
+//  buffer[z] = ' ';
+//}
+//  Serial.println("laenge Alpha. :" + alphabetLength);
+//  tft.setCursor(0, 0);
+//  tft.println(headline);
+//  while (i < inputLength)
+//{
+//// 7 zeichen aus dem alphabet anzeigen
+//for(int y=-3; y<=3; y++)
+//{
+//int h = pos + y;
+//if(h<0)
+//{
+//h = alphabetLength + h;
+//}
+//else if(h>=alphabetLength)
+//{
+//h = h-alphabetLength;
+//}
+//scroll[y+3] = alphabet[h];
+//}
+//scroll[7] = '\0';
+//// ausgabe auf lcd
+//writeLine2(output, 0);
+//writeLine2("||", 7);
+//writeLine2(scroll, 9);
+//lcd.setCursor(12,1);
+//// knöpfe gedöns
+//while (rightBtn.update() == 0 && leftBtn.update() == 0 && okBtn.update() == 0 && backBtn.update() == 0);
+//if (rightBtn.read() == 1)
+//{
+//pos++;
+//}
+//if (leftBtn.read() == 1)
+//{
+//pos--;
+//}
+//if (pos < 0)
+//{
+//pos = (alphabetLength-1) - abs(pos);
+//}
+//else if (pos >= alphabetLength)
+//{
+//pos = pos - alphabetLength;
+//}
+//if(okBtn.read() == 1)
+//{
+//int millisek = millis();
+//while(okBtn.update() == 0) { };
+//int time = (millis() - millisek)/1000; //Zeit des Knopfdrückens in sek
+//if(time < 2)
+//{
+//buffer[i] = alphabet[pos];
+//i++;
+//} else {
+//char pwd[i];
+//for(int y = 0; y < i; y++)
+//{
+//pwd[y] = buffer[y];
+//}
+//pwd[i] = '\0';
+//return pwd;
+//}
+//}
+//if(okBtn.read() == 1)
+//{
+//buffer[i] = alphabet[pos];
+//i++;
+//}
+//if(backBtn.read() == 1) //1 Zeichen löschen
+//{
+//buffer[i-1] = ' ';
+//i--;
+//}
+////--------------
+//}
 //
-//	Serial.println("laenge Alpha. :" + alphabetLength);
-//
-//	
-//        writeLine1(headline);
-//        writeLine2(scroll, 9);
-//	writeLine2("||", 7);
-//        for (int i = 0; i < inputLength; i++){
-//          buffer[i] = ' ';
-//        }
-//	while (i < inputLength)
-//	{
-//		//--------------Ausgabe letzter 7 Ziffern
-//		start = i - 7;
-//		if (i < 0) start = 0;
-//		
-//		int z = 6;
-//
-//		for (int y = 0; y<7; y++)
-//		{
-//			output[y] = buffer[start + y];      //leer machen
-//		}
-//		output[7] = '\0';
-//
-//		//--------------Scrolling
-//
-//		
-//
-//		//for (int y = 3; y >= 0; y--)
-//		//{
-//		//	if (pos - y < 0)
-//		//	{
-//		//		p = alphabetLength - y;
-//		//	}
-//		//	else{
-//		//		p = pos - y;
-//		//	}
-//
-//		//	scroll[z] = alphabet[p];
-//		//	z++;
-//		//}
-//
-//		//scroll[7] = '\0';
-//
-//		//for (int y = 1; y <= 3; y++)
-//		//{
-//		//	if (pos + y > alphabetLength - 1)
-//		//	{
-//		//		p = (pos + y) - alphabetLength;
-//		//	}
-//		//	else{
-//		//		p = pos + y;
-//		//	}
-//
-//		//	scroll[z] = alphabet[p];
-//		//	z++;
-//		//}
-//
-//		for (int y = -3; y <= 3; y++)
-//		{
-//			if (pos - y < 0)
-//			{
-//				p = alphabetLength - y;
-//			}
-//			else if (pos-y > alphabetLength - 1)
-//			{
-//				p = (pos - y) - alphabetLength;
-//			}
-//			else 
-//			{
-//				p = pos - y;
-//			}
-//
-//			scroll[z] = alphabet[p];
-//			z--;
-//		}
-//
-//
-//		scroll[7] = '\0';
-//
-//		//   Serial.println(scroll + '|' + pos);
-//
-//		//--------------
-//                
-//                uint8_t b;
-//                b = readButton();
-//                if (b == BUTTON_DOWN) {
-//			pos++;
-//                        delay(500);
-//                }
-//                if (b == BUTTON_LEFT) {
-//                }
-//                if (b == BUTTON_UP) {
-//			pos--;
-//                        delay(500);
-//                }
-//                if (b == BUTTON_RIGHT) {
-//                }
-//
-//		if (pos < 0)
-//		{
-//			pos = alphabetLength - abs(pos);
-//		}
-//		if (pos > alphabetLength - 1)
-//		{
-//			pos = pos - alphabetLength;
-//		}
-//                if (b == BUTTON_SELECT) {
-//                        buffer[letter_pos] = alphabet[pos];
-//                        letter_pos++;
-//                }                
-//                if (b != BUTTON_NONE) {
-//                   tft.fillScreen(ST7735_BLACK);
-//                   writeLine1(headline);
-//                   writeLine2(scroll, 9);
-//		   writeLine2("||", 7);
-//                   writeLine2(output);
-//                   Serial.println(output);
-//                   delay(200);
-//                }
-//		//--------------
-//
-//	}
+// char pwd[i];
+//for(int y = 0; y < i; y++)
+//{
+//pwd[y] = buffer[y];
+//}
+//pwd[i] = '\0';
+//Serial.print("S: ");
+//Serial.println(pwd);
+//return pwd;
 //}
 
 //---------------------------------------------------------------
@@ -246,7 +209,7 @@ int showMenu(char* entries[])
 {
 	boolean endLoop = false;
 	int rueckgabe;
-	int i = 1;
+	int i = 2;
         highlightRaw(i);
         writeList(entries);
         
@@ -260,7 +223,7 @@ int showMenu(char* entries[])
 			i++;
 			if (sizeArray(entries) < i)
 			{
-				i = 1;
+				i = 2;
                             
 			}
                                 highlightRaw(i);
@@ -270,7 +233,7 @@ int showMenu(char* entries[])
                 }
                 if (b == BUTTON_UP) {
 			i--;
-			if (i == 0)
+			if (i == 1)
 			{
 				i = sizeArray(entries);
                              
@@ -286,7 +249,7 @@ int showMenu(char* entries[])
 			endLoop = true;
 		}
                 if (b != BUTTON_NONE) {
-                  delay(500);
+                  delay(300);
                 }
                 Serial.println("A");
 	}
