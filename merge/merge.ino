@@ -6,6 +6,8 @@
 #define okBtnPin 8
 #define backBtnPin 9
 
+//
+
 char ch;
 int Contrast = 15;
 // inits
@@ -17,6 +19,11 @@ Bounce leftBtn = Bounce();
 Bounce okBtn = Bounce();
 Bounce backBtn = Bounce();
 
+/*
+============================================================
+Every char[][] array must contain an empty string at the end
+============================================================
+*/
 
 
 /* DEBUG */
@@ -111,15 +118,17 @@ char* userinput(char* headline, int inputLength)  //inputLength > 7
                 
                 if(okBtn.read() == 1)
                 {
-                  int millisek = millis();
+                  unsigned long millisek = millis();
                   while(okBtn.update() == 0) { };
                   int time = (millis() - millisek)/1000;           //Zeit des Knopfdrückens in sek
-                  
                   if(time < 2)
                   {
+                    Serial.println(time);
                     buffer[i] = alphabet[pos];
                     i++;
                   } else {
+                    Serial.print("Else: ");
+                    Serial.println(time);
                     
                     char pwd[i];
                     for(int y = 0; y < i; y++)
@@ -162,6 +171,7 @@ char* userinput(char* headline, int inputLength)  //inputLength > 7
 
 int showMenu(char title[], char* entries[])
 {
+        Serial.println(entries[0]);
 	writeLine1(title);
 	boolean endLoop = false;
 	int rueckgabe;
@@ -178,14 +188,14 @@ int showMenu(char title[], char* entries[])
 			i++;
 			if (*(entries[i]) == 0)
 			{
-				i = 1;
+				i = 0;
 			}
 		}
 
 		if (leftBtn.read() == 1)
 		{
 			i--;
-			if (i == 0)
+			if (i < 0)
 			{
 				i = sizeArray(entries) - 1;
 			}
@@ -196,6 +206,9 @@ int showMenu(char title[], char* entries[])
 			//writeLine1(entries[i]);
 			endLoop = true;
 		}
+                if (backBtn.read() == 1) {
+                  return -1;
+                }
 	}
 	lcd.clear();
 	return i;
@@ -204,12 +217,15 @@ void keyboard_send(char text[]) {
   Serial.println(text);
 }
 void display(char text[]) {
-  Serial.println(text);
+  writeLine1("Anzeige");
+  writeLine2(text);
+  while (rightBtn.update() == 0 && leftBtn.update() == 0 && okBtn.update() == 0 && backBtn.update() == 0);
 }
 char** db_listTitles() {
   // TODO: IDs
-  char* titleList[] = {"facebook user", "google user", "mac user"};
-  return titleList;
+  // TODO: Implement with malloc. Current version not working
+  char* titleArray[] = {"facebook bdz12", "google gdz11", "mac user", "macuser"};
+  return titleArray;
 }
 void db_newPW(char* newServiceName, char* newUsername, char* newPW){
 
@@ -221,13 +237,23 @@ void db_editMPW(char* newMPW) {
 
 }
 
+DBEntry facebook{0, "fbpwd", "bdz12", "facebook"};
+
+DBEntry google {1, "googlepwd", "gdz11", "google"};
+
+DBEntry mac {2, "macpwd", "macuser", "mac"};
+
 struct DBEntry db_getEntry(int id) {
-  struct DBEntry entry;
-  entry.id = id;
-  entry.pw = "password";
-  entry.username = "username";
-  entry.service = "muster";
-  return entry;
+  if (id == 0) {
+    return facebook;
+  }
+  if (id == 1) {
+    return google;
+  }
+  if (id == 2) {
+    return mac;
+  }
+  return facebook;
 }
 
 /*   PROTOTYPES   */
@@ -397,7 +423,8 @@ int mainMenu() {
   char title[] = "Hauptmenue";			     
   char *mainMenuEntries[] = {"PW-Auswahl",
 			     "Neues PW",
-			     "MPW aendern"};
+			     "MPW aendern",
+                             "" };
   int ret = showMenu(title, mainMenuEntries);
   
   switch (ret) {
@@ -412,7 +439,8 @@ int mainMenu() {
 int selectPW() {
   Serial.print("Select PW\n");
   char title[] = "PW Auswahl";
-  int ret = showMenu(title, db_listTitles());
+  char* titleArray[] = {"facebook bdz12", "google gdz11", "mac user", "macuser"};
+  int ret = showMenu(title, titleArray);
   if (ret < 0) {
     return MAIN_MENU;
   }
@@ -424,9 +452,10 @@ int displayPW() {
   struct DBEntry entry = db_getEntry(ctx.selected_pw);
   char *title = entry.service;
   char *displayPWEntries[] = {"PW senden",
-			      "Benutzername senden",
+			      "Username senden",
 			      "PW anzeigen",
-			      "PW aendern"};
+			      "PW aendern",
+                              ""};
   int ret = showMenu(title, displayPWEntries);
   if (ret < 0) {
     return SELECT_PW;
@@ -448,7 +477,8 @@ int newPW(){
   char* newUsername = userinput(headline, 64);
   headline = "Eingabetyp waehlen";
   char* PWNewEntries[] = {"PW generieren", 
-			  "PW eingeben"};
+			  "PW eingeben",
+                          ""};
   int ret = showMenu(headline, PWNewEntries);
   if (ret < 0){
     return DISPLAY_PW;
@@ -465,7 +495,8 @@ int editPW(){
   Serial.print("Edit PW\n");
   char headline[] = "Eingabetyp waehlen";
   char* editPWEntries[] = {"PW generieren", 
-			   "PW eingeben"};
+			   "PW eingeben",
+                           ""};
   int ret = showMenu(headline, editPWEntries);
   if (ret < 0) {
     return DISPLAY_PW;
@@ -489,7 +520,7 @@ int editMPW(){
 
 char* enterPW(){
   Serial.print("Enter PW\n");
-  char headline[] = "Passwort eingeben";
+  char headline[] = "PW eingeben";
   char* pw = userinput(headline, 64);
   return pw;
 }
