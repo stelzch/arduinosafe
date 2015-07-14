@@ -104,7 +104,8 @@ char* userinput(char* headline, int inputLength)  //inputLength > 7
 
 		if (leftBtn.read() == 1)
 		{
-			pos--;
+
+  			pos--;
 		}
 
 		if (pos < 0)
@@ -221,12 +222,12 @@ void display(char text[]) {
   writeLine2(text);
   while (rightBtn.update() == 0 && leftBtn.update() == 0 && okBtn.update() == 0 && backBtn.update() == 0);
 }
-char** db_listTitles() {
+//char** db_listTitles() {
   // TODO: IDs
   // TODO: Implement with malloc. Current version not working
-  char* titleArray[] = {"facebook bdz12", "google gdz11", "mac user", "macuser"};
-  return titleArray;
-}
+  // char* titleArray[] = {"facebook bdz12", "google gdz11", "mac macuser", ""};
+  // return titleArray;
+//}
 void db_newPW(char* newServiceName, char* newUsername, char* newPW){
 
 }
@@ -440,7 +441,7 @@ int mainMenu() {
 int selectPW() {
   // Serial.print("Select PW\n");
   char title[] = "PW Auswahl";
-  char* titleArray[] = {"facebook bdz12", "google gdz11", "mac user", "macuser"};
+  char* titleArray[] = {"facebook bdz12", "google gdz11", "mac user", "macuser", ""};
   int ret = showMenu(title, titleArray);
   if (ret < 0) {
     return MAIN_MENU;
