@@ -6,57 +6,52 @@
     //ok better u del the last 2 indizies, or u add 2 indizes to the Char array
     //this part was useless, but i think it looks nice and maybe, there is some other usage 4 it later
 
-uint8_t buf[8] = { 0 };	//Buffer for the HID KEY 2 send 2 the pc
 
-void setup();
-void loop();
+uint8_t buf[8] = { 0 }; //Buffer for the HID KEY 2 send 2 the pc
+#define KEY_LEFT_CTRL 0x01
+#define KEY_LEFT_SHIFT 0x02
+#define KEY_RIGHT_CTRL 0x10
+#define KEY_RIGHT_SHIFT 0x20
 
-#define KEY_LEFT_CTRL	0x01
-#define KEY_LEFT_SHIFT	0x02
-#define KEY_RIGHT_CTRL	0x10
-#define KEY_RIGHT_SHIFT	0x20
 
-void setup() 
-{
-    Serial.begin(9600);
-    delay(200);
+int  st(char *str){
+char *chp = str;
+delay(5000);
+while (*chp) {
+if ((*chp >= 'a') && (*chp <= 'z')) {
+buf[2] = *chp - 'a' + 4;
+} else if ((*chp >= 'A') && (*chp <= 'Z')) {
+buf[0] = KEY_LEFT_SHIFT; /* Caps */
+buf[2] = *chp - 'A' + 4;
+} else {
+switch (*chp) {
+case ' ':
+buf[2] = 0x2c; // including the HID Code for the virtuell Space Key
+break;
+case '+':
+buf[2] = 128; // including the HID Code for the virtuell Volume up key
+break;
+case '-':
+buf[2] = 129; // including the HID Code for the virtuell Down Key
+break;
+default:
+//char didnt got handeld
+buf[2] = 0x37;
+break;
+}
+}
+Serial.write(buf, 8); // sending the HID Code which creates the Virtuell keypress
+buf[0] = 0;
+buf[2] = 0;
+Serial.write(buf, 8); // releaseing key
+chp++;
+}
 }
 
-char *str = "txttosend";
+void setup(){
+ Serial.begin(9600);
+delay(200);};
 
-void loop() 
-{
-    char *chp = str;
-    delay(5000);
-    while (*chp) {
-	    
-	if ((*chp >= 'a') && (*chp <= 'z')) {
-	    buf[2] = *chp - 'a' + 4;
-	} else if ((*chp >= 'A') && (*chp <= 'Z')) {
-	    buf[0] = KEY_LEFT_SHIFT;	/* Caps */
-	    buf[2] = *chp - 'A' + 4;
-	} else {
-	    switch (*chp) {
-	    case ' ':
-	    	buf[2] = 0x2c;	// including the HID Code for the virtuell Space Key
-		break;
-	    case '+':
-	       buf[2] = 128;	// including the HID Code for the virtuell  Volume up key
-	       break;
-	    case '-':
-	       buf[2] = 129;	// including the HID Code for the virtuell Down Key
-	       break;
-	    default:
-	        //char didnt got handeld
-		buf[2] = 0x37;	
-		break;
-	    }
-	}
-
-	Serial.write(buf, 8);	// sending the HID Code which creates the Virtuell keypress
-	buf[0] = 0;
-	buf[2] = 0;
-	Serial.write(buf, 8);	// releaseing key
-	chp++;
-    }
+void loop(){
+  st("dw");
 }
