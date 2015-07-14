@@ -15,8 +15,7 @@ struct DBEntry {
 };
 /* ========================= PROTOTYPES =========================== */
 void db_setup();
-char db_newPW(DBEntry);
-void db_editPW(int id, char *);
+
 void db_editMPW(char *newMPW);
 struct DBEntry db_getEntry(int id);
 File root;
@@ -26,6 +25,10 @@ void setup() {
   delay(3000);
   Serial.begin(9600);
   db_setup();
+  Serial.println("Writing file...");
+  struct DBEntry e = { 143, "testPW2", "Github", "fooUser" };
+  db_newPW(e);
+  Serial.println("Finished!");
 }
 
 void db_setup() {
@@ -64,6 +67,7 @@ void db_listTitles(char destination[MAX_ENTRIES][MAX_TITLE_LENGTH]) {
       } while(c != 10);
       counter++;
     }
+    root.rewindDirectory();
 }
 struct DBEntry db_getEntry(int id) {
   struct DBEntry entry;
@@ -100,9 +104,41 @@ struct DBEntry db_getEntry(int id) {
   
   return entry;
 }
+/**
+* Warning: the id given in the DBEntry struct doesn't matter
+*
+*/
+char db_newPW(struct DBEntry entry) {
+  int lastFile = 0;
+  while(true) {
+    File f = root.openNextFile();
+    
+    if(!f) {
+      break;
+    } else {
+      lastFile++;
+    }
+  }
   
+  entry.id = lastFile + 1;
+  String fileName = "/pwdsafe/";
+  fileName += entry.id;
+  Serial.print("Writing to: ");Serial.println(fileName);
+  char filename[9+MAX_FILENAME_LENGTH];
+  fileName.toCharArray(filename, 9+MAX_FILENAME_LENGTH);
+  File file = SD.open(filename, FILE_WRITE);
+  
+  file.println(entry.username);
+  file.println(entry.service);
+  file.println(entry.pw);
+  
+  file.flush();
+  file.close();
+  root.rewindDirectory();
+} 
 void loop() {
-  struct DBEntry e = db_getEntry(2);
-  Serial.println(e.pw);
-  delay(10000);
+  delay(5000);
+  
+
+  
 }
