@@ -49,6 +49,7 @@ void setup()
         tftHL.fillScreen(ST7735_BLACK);
         tftHL.setRotation(1);
         
+        
 }
 
 uint8_t readButton(void) {
@@ -67,7 +68,8 @@ uint8_t readButton(void) {
 
 int i = 0;
 void loop(){
-    Serial.println(input("Test", alphabet, 16));
+ Serial.println(input("Test", alphabet, 16));
+
 
 }
 
@@ -167,7 +169,7 @@ char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
 
 	char buffer[inputLength + 1];
         buffer[inputLength] = '\0';
-	int pos = 1;
+	uint16_t pos = 1;
 	int alphabetLength = 62;           //sizeArray(alphabet);
         
         for(int i = 0; i < inputLength; i++)
@@ -181,11 +183,14 @@ char* input(char* headline, char* alphabet, int inputLength)  //inputLength > 7
 	while (i < inputLength)
 	{
           tft.fillScreen(ST7735_BLACK);
+                          tft.fillRect(6*(pos % 26)-6, 8*((pos-1)/26)+8, 5, 7, 63488);
           Serial.println(headline);
                 writeHeadline(headline);
                 tft.println(buffer);
                 tft.println(alphabet);
                 
+                //tft.drawLine(6*(pos % 26)-6, 8*((pos-1)/26)+15, 6*(pos % 26)-1, 8*((pos-1)/26)+15, 63488);
+
                 // knöpfe gedöns
 		while (readButton() == BUTTON_NONE);
 
