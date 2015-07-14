@@ -55,7 +55,7 @@ char* userinput(char* headline, int inputLength)  //inputLength > 7
         }
         
         
-	Serial.println("laenge Alpha. :" + alphabetLength);
+	// Serial.println("laenge Alpha. :" + alphabetLength);
 
 	writeLine1(headline);
 
@@ -123,12 +123,12 @@ char* userinput(char* headline, int inputLength)  //inputLength > 7
                   int time = (millis() - millisek)/1000;           //Zeit des Knopfdrückens in sek
                   if(time < 2)
                   {
-                    Serial.println(time);
+                    // Serial.println(time);
                     buffer[i] = alphabet[pos];
                     i++;
                   } else {
-                    Serial.print("Else: ");
-                    Serial.println(time);
+                    // Serial.print("Else: ");
+                    // Serial.println(time);
                     
                     char pwd[i];
                     for(int y = 0; y < i; y++)
@@ -162,8 +162,8 @@ char* userinput(char* headline, int inputLength)  //inputLength > 7
       pwd[y] = buffer[y];
     }
     pwd[i] = '\0';    
-    Serial.print("S: ");
-    Serial.println(pwd);
+    // Serial.print("S: ");
+    // Serial.println(pwd);
     return pwd;
 }
 
@@ -171,7 +171,7 @@ char* userinput(char* headline, int inputLength)  //inputLength > 7
 
 int showMenu(char title[], char* entries[])
 {
-        Serial.println(entries[0]);
+        // Serial.println(entries[0]);
 	writeLine1(title);
 	boolean endLoop = false;
 	int rueckgabe;
@@ -214,7 +214,7 @@ int showMenu(char title[], char* entries[])
 	return i;
 }
 void keyboard_send(char text[]) {
-  Serial.println(text);
+  Keyboard.print(text);
 }
 void display(char text[]) {
   writeLine1("Anzeige");
@@ -308,6 +308,7 @@ void setup()
 	analogWrite(6, Contrast);
 	lcd.begin(16, 2);
 	Serial.begin(9600);
+        Keyboard.begin();
 	digitalWrite(13, LOW);
 	delay(1000);
 	digitalWrite(13, HIGH);
@@ -411,15 +412,15 @@ int enterMasterPassword() {
     actual_mpw[pos] = tmp;
   }
   actual_mpw[pos] = '\0';
-  Serial.print("Before compare\n");
+  // Serial.print("Before compare\n");
   if (/*strncmp(mpw, actual_mpw, pos)*/0 == 0) { // TODO: fix strcmp
     return MAIN_MENU; 
   }
-  Serial.print("After compare\n");
+  // Serial.print("After compare\n");
   return ENTER_MASTER_PASSWORD;
 }
 int mainMenu() {
-  Serial.print("Main Menu\n");
+  // Serial.print("Main Menu\n");
   char title[] = "Hauptmenue";			     
   char *mainMenuEntries[] = {"PW-Auswahl",
 			     "Neues PW",
@@ -437,7 +438,7 @@ int mainMenu() {
   return MAIN_MENU;
 }
 int selectPW() {
-  Serial.print("Select PW\n");
+  // Serial.print("Select PW\n");
   char title[] = "PW Auswahl";
   char* titleArray[] = {"facebook bdz12", "google gdz11", "mac user", "macuser"};
   int ret = showMenu(title, titleArray);
@@ -448,7 +449,7 @@ int selectPW() {
   return DISPLAY_PW;
 }
 int displayPW() {
-  Serial.print("Display PW\n");
+  // Serial.print("Display PW\n");
   struct DBEntry entry = db_getEntry(ctx.selected_pw);
   char *title = entry.service;
   char *displayPWEntries[] = {"PW senden",
@@ -469,7 +470,7 @@ int displayPW() {
   return DISPLAY_PW;
 }
 int newPW(){
-  Serial.print("New PW\n");
+  // Serial.print("New PW\n");
   char title[] = "Neues PW";
   char* headline = "servicename";
   char* newServiceName = userinput(headline, 64);
@@ -492,7 +493,7 @@ int newPW(){
   return MAIN_MENU;
 }
 int editPW(){
-  Serial.print("Edit PW\n");
+  // Serial.print("Edit PW\n");
   char headline[] = "Eingabetyp waehlen";
   char* editPWEntries[] = {"PW generieren", 
 			   "PW eingeben",
@@ -510,7 +511,7 @@ int editPW(){
   return DISPLAY_PW;
 }
 int editMPW(){
-  Serial.print("Edit MPW\n");
+  // Serial.print("Edit MPW\n");
   char* newMPW;
   newMPW = enterPW();
   db_editMPW(newMPW);
@@ -519,13 +520,13 @@ int editMPW(){
 
 
 char* enterPW(){
-  Serial.print("Enter PW\n");
+  // Serial.print("Enter PW\n");
   char headline[] = "PW eingeben";
   char* pw = userinput(headline, 64);
   return pw;
 }
 char* generatePW(){
-  Serial.print("Generate PW\n");
+  // Serial.print("Generate PW\n");
   char pw[] = "123456789012345";
   return pw;
 }
